@@ -18,6 +18,8 @@
       is an artifact of the underlying numbers: (0xff>>1)+(0xff>>2)+(0xff>>2) is 0xFD, not 0xFF.
     - I use two of the bits in the 16-bit word to store state. This means that sizeof(DebounceFilter)
       is just the two bytes for the filter.
+    - cactusjack's time-based sampling is not done here. It it moved into DebouncedButton, and 
+      does not use delay()
  
     In normal use, you pass it a series of samples
     via the addSample method, and read the debounced result with state(). A convenience method stateChanged()
