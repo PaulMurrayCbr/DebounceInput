@@ -19,6 +19,8 @@ of the switch grounded.
 You will need an LED on pin 13, but most arduino boards have an onboard LED
 on the pin already.
 
+Copyright (c) Paul Murray, 2015. Released into the public domain
+under the unlicense http://unlicense.org .
 */
 
 

@@ -18,6 +18,8 @@ of the switch grounded.
 
 You will to monitor the serial output (the IDE works fine).
 
+Copyright (c) Paul Murray, 2015. Released into the public domain
+under the unlicense http://unlicense.org .
 */
 
 

@@ -1,5 +1,8 @@
 /*
  * DebounceInput - a library for debouncing digital inputs.
+ *
+ * Copyright (c) Paul Murray, 2015. Released into the public domain
+ * under the unlicense http://unlicense.org .
  */
 
 #ifndef DebounceInput_h

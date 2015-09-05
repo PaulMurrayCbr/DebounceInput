@@ -18,6 +18,9 @@ sample rate limit.
 Hardware setup:
 This sketch runs stand-alone, outputting some text to the serial monitor.
 
+Copyright (c) Paul Murray, 2015. Released into the public domain
+under the unlicense http://unlicense.org .
+
 */
 
 #include <DebounceInput.h>

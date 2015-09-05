@@ -1,6 +1,9 @@
 /**
  * DebounceInput - a library for debouncing digital inputs.
  * See DebounceInput.h for details.
+ *
+ * Copyright (c) Paul Murray, 2015. Released into the public domain
+ * under the unlicense http://unlicense.org .
  */
 
 #include "DebounceInput.h"
