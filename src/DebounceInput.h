@@ -31,8 +31,7 @@
  */
 
 class DebounceFilter {
-    friend class DebouncedButton;
-private:
+protected:
     /*
         holds 2 7-bit values, being the two "filters", and 2 state bits. The state bits hold
         the current output state (which is used to drive the schmitt trigger) and whether or not
@@ -66,10 +65,9 @@ public:
     This class builds a model on a digital input pin. The constructor initialises the pin to INPUT_PULLUP and reads its initial state.
  */
 
-class DebouncedInput {
+class DebouncedInput : protected DebounceFilter {
 protected:
     int pin;
-    DebounceFilter filter;
 public:
     //! Set up pin as INPUT_PULLUP, and use it as a source of input
     DebouncedInput(int pin);

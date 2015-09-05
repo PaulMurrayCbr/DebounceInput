@@ -99,3 +99,35 @@ void DebounceFilter::reset(boolean state) {
     mostRecent4ms = truncatedMillis();
 }
 
+DebouncedInput::DebouncedInput(int pin) {
+    this->pin = pin;
+    pinMode(pin, INPUT_PULLUP);
+    reset(digitalRead(pin));
+}
+
+boolean DebouncedInput::read() {
+    addSample(digitalRead(pin));
+    return (filter & OUTPUT_MASK) != 0;
+}
+
+boolean DebouncedInput::high() {
+    return (filter & OUTPUT_MASK) != 0;
+}
+
+boolean DebouncedInput::low() {
+    return (filter & OUTPUT_MASK) == 0;
+}
+
+boolean DebouncedInput::changing() {
+    return (filter & CHANGE_MASK) != 0;
+}
+
+boolean DebouncedInput::falling() {
+    return (filter & (CHANGE_MASK|OUTPUT_MASK)) == CHANGE_MASK;
+}
+
+boolean DebouncedInput::rising() {
+    return (filter & (CHANGE_MASK|OUTPUT_MASK)) == (CHANGE_MASK|OUTPUT_MASK);
+}
+
+
