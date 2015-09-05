@@ -1,2 +1,2 @@
 DebounceFilter
-DebouncedButton
+DebouncedInput
