@@ -7,7 +7,6 @@
 
 #include <Arduino.h>
 
-
 //! Debounce algorithm implementation.
 /*!
     An implementation of cactusjack's
@@ -44,9 +43,10 @@ private:
      (0xFF<<2) ms is about 1 second - any sketch should be sampling its buttons faster than that.
      */
     byte mostRecent4ms;
+    
 public:
     //! A filter initialised to false
-    DebounceFilter();
+    DebounceFilter() : DebounceFilter(false) {}
     //! A filter initialsed to the specified initial state
     DebounceFilter(boolean initialState);
     //! push a sample into the filter
@@ -67,7 +67,7 @@ public:
  */
 
 class DebouncedInput {
-private:
+protected:
     int pin;
     DebounceFilter filter;
 public:
@@ -87,11 +87,11 @@ public:
     boolean rising();
     
     //! read the pin, true if the debounced signal changed state
-    boolean readChanging() { read(); return changing();}
+    inline boolean readChanging() { read(); return changing();}
     //! read the pin, true if the debounced signal went from HIGH to LOW
-    boolean readFalling() { read(); return falling();}
+    inline boolean readFalling() { read(); return falling();}
     //! read the pin, true if the debounced signal went from LOW to HIGH
-    boolean readRising() { read(); return rising();}
+    inline boolean readRising() { read(); return rising();}
 };
 
 #endif

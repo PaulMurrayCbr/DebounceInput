@@ -3,7 +3,9 @@ This is a library for the Arduino IDE for debouncing digital inputs (buttons, sw
 
 Two classes are provided, DebounceFilter and DebouncedInput.
 
-For more information, see `DebounceInput.h`.
+For more information, see `src/DebounceInput.h`.
+
+*** TODO *** Make a better doc file, put it in extras.
 
 **DebounceFilter**
 
@@ -17,14 +19,17 @@ A class which is constructed on a digital input pin, and which uses a DebounceFi
 
 To download. click the DOWNLOAD ZIP button, rename the uncompressed folder DebounceInput. 
 
-Place the DebounceInput library folder your `arduinosketchfolder/libraries/` folder. 
-
-You may need to create the libraries subfolder if its your first library. Restart the IDE.
+Place the DebounceInput library folder your `arduinosketchfolder/libraries/` folder (create the folder if necessary).
 
 ### Method 2 - use git
 
-Navigate to your `arduinosketchfolder/libraries/` folder, and clone the repository there.
+Navigate to your `arduinosketchfolder/libraries/` folder (create the folder if necessary), and clone the repository there.
 
 	git clone https://github.com/PaulMurrayCbr/DebounceInput.git
 
-You may need to create the libraries subfolder if its your first library. Restart the IDE.
+## Using
+
+After restarting the IDE, navigate to `Sketch > Include Library` in the menu. "Debounce Input" should appear at the bottom, under "contributed ibraries".
+
+Example sketches using the library appear under `File > Examples > Debounce Input`
+
