@@ -102,13 +102,28 @@ void DebounceFilter::reset(boolean state) {
     mostRecent4ms = truncatedMillis();
 }
 
+DebouncedInput::DebouncedInput() {
+    this->pin = -1;
+}
+
 DebouncedInput::DebouncedInput(int pin) {
     this->pin = pin;
     pinMode(pin, INPUT_PULLUP);
     reset(digitalRead(pin));
 }
 
+void DebouncedInput::attach(int pin) {
+    this->pin = pin;
+    reset(digitalRead(pin));
+}
+
+void DebouncedInput::detach() {
+    this->pin = -1;
+    reset(false);
+}
+
 boolean DebouncedInput::read() {
+    if(pin == -1) return false;
     addSample(digitalRead(pin));
     return (filter & OUTPUT_MASK) != 0;
 }

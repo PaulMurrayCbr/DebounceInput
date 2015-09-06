@@ -27,17 +27,19 @@ under the unlicense http://unlicense.org .
 
 #define INPUT_PIN 4
 
-DebouncedInput pin(INPUT_PIN);
+DebouncedInput pin;
 
 unsigned long second;
 
 void setup() {
-  /*
-   Note that we do not set up the input pin. The debouncedInput
-   class does this for us, assuming INPUT_PULLUP (the ususal case)
-   */
-
   Serial.begin(9600);
+  while(!Serial) {
+    ; // wait for the serial to be ready
+  }
+  
+  
+  pinMode(INPUT_PIN, INPUT_PULLUP);
+  pin.attach(INPUT_PIN);
 }
 
 void loop() {

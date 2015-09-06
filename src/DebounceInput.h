@@ -72,8 +72,17 @@ class DebouncedInput : protected DebounceFilter {
 protected:
     int pin;
 public:
+    //! A DebouncedInput unconnected to a pin
+    DebouncedInput();
+    
     //! Set up pin as INPUT_PULLUP, and use it as a source of input
     DebouncedInput(int pin);
+    
+    //! attach the DebouncedInput to a pin
+    void attach(int pin);
+    //! detach the DebouncedInput from its assigned pin
+    void detach();
+    
     //! read the pin, true if the debounced signal is HIGH
     boolean read();
     //! true if the debounced signal is HIGH
