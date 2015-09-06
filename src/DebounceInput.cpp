@@ -62,7 +62,7 @@ void DebounceFilter::forceSample(boolean sample) {
     // the limits of 60 for the lower and A0 for the upper are experimental
     
     if(filter&OUTPUT_MASK) {
-        if(mul < 0x7000) {
+        if((mul >> 8) < fallingThreshhold) {
             filter = CHANGE_MASK;
         }
         else {
@@ -70,7 +70,7 @@ void DebounceFilter::forceSample(boolean sample) {
         }
     }
     else {
-        if(mul > 0x9000) {
+        if((mul >> 8) > risingThreshhold) {
             filter = FILTERS | CHANGE_MASK | OUTPUT_MASK;
         }
         else {

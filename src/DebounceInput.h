@@ -47,10 +47,14 @@ protected:
     byte mostRecent4ms;
     
 public:
+    byte risingThreshhold = 0x90;
+    byte fallingThreshhold = 0x70;
+    
     //! A filter initialised to false
     DebounceFilter() : DebounceFilter(false) {}
     //! A filter initialsed to the specified initial state
     DebounceFilter(boolean initialState);
+    
     //! push a sample into the filter
     void addSample(boolean sample);
     //! push a sample into the filter, ignoring the 4ms timer
@@ -72,6 +76,9 @@ class DebouncedInput : protected DebounceFilter {
 protected:
     int pin;
 public:
+    using DebounceFilter::risingThreshhold;
+    using DebounceFilter::fallingThreshhold;
+    
     //! A DebouncedInput unconnected to a pin
     DebouncedInput();
     
