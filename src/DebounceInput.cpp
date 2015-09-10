@@ -14,31 +14,14 @@
 #define FILTER_2 0xFE00
 #define FILTERS 0xFEFE
 
-// just some inline code to shave millis() down to a byte,
-// accurate to 4ms.
-#define truncatedMillis() ((byte)(((word)millis())>>2))
-
 //! A filter initialsed to the specified initial state
 DebounceFilter::DebounceFilter(boolean initialState) {
     reset(initialState);
 }
 
+
 //! push a sample into the filter
 void DebounceFilter::addSample(boolean sample) {
-    byte now = truncatedMillis();
-    if(now == mostRecent4ms) {
-        // we dont push the sample, but we do
-        // treat the state as if we had.
-        filter &= ~CHANGE_MASK;
-    }
-    else {
-        forceSample(sample);
-        mostRecent4ms = now;
-    }
-}
-
-//! push a sample into the filter, ignoring the 4ms timer
-void DebounceFilter::forceSample(boolean sample) {
     // multiply both filters by .75
     // this blatts the status bits, so we will use a local var
 
@@ -99,11 +82,25 @@ void DebounceFilter::reset(boolean state) {
     else {
         filter = 0;
     }
-    mostRecent4ms = truncatedMillis();
 }
 
+//! push a sample into the filter
+void DebounceFilter4ms::addSampleRateLimited(boolean sample) {
+    byte now = ((byte)(((word)millis())>>2));
+    if(now == mostRecent4ms) {
+        // we dont push the sample, but we do
+        // treat the state as if we had.
+        filter &= ~CHANGE_MASK;
+    }
+    else {
+        addSample(sample);
+        mostRecent4ms = now;
+    }
+}
+
+
 DebouncedInput::DebouncedInput() {
-    this->pin = -1;
+    this->pin = 255;
 }
 
 DebouncedInput::DebouncedInput(int pin) {
@@ -118,13 +115,17 @@ void DebouncedInput::attach(int pin) {
 }
 
 void DebouncedInput::detach() {
-    this->pin = -1;
+    this->pin = 255;
     reset(false);
 }
 
+boolean DebouncedInput::attached() {
+    return this->pin == 255;
+}
+
 boolean DebouncedInput::read() {
-    if(pin == -1) return false;
-    addSample(digitalRead(pin));
+    if(pin == 255) return false;
+    addSampleRateLimited(digitalRead(pin));
     return (filter & OUTPUT_MASK) != 0;
 }
 

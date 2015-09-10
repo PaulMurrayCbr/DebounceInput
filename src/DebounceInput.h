@@ -26,7 +26,7 @@
       is an artifact of the underlying numbers: (0xff>>1)+(0xff>>2)+(0xff>>2) is 0xFD, not 0xFF.
     - I use two of the bits in the 16-bit word to store state. This means that sizeof(DebounceFilter)
       is just the two bytes for the filter. and one byte to manage the time-based sampling.
-    - time-based sampling **does not use delay()**. 
+    - The rate limiting sample is farmed out to a subclass
  
     In normal use, you pass a DebounceFilter a series of samples
     via the addSample method, and read the debounced result with state(). convenience method stateChanged()
@@ -41,10 +41,6 @@ protected:
         the state changed last sample (which is used to detect up/down events 
      */
     word filter;
-    /* holds (byte)(millis() >> 2), rounding off millis to 4ms. 
-     (0xFF<<2) ms is about 1 second - any sketch should be sampling its buttons faster than that.
-     */
-    byte mostRecent4ms;
     
 public:
     byte risingThreshhold = 0x90;
@@ -57,8 +53,6 @@ public:
     
     //! push a sample into the filter
     void addSample(boolean sample);
-    //! push a sample into the filter, ignoring the 4ms timer
-    void forceSample(boolean sample);
     //! debounced state
     boolean state();
     //! true if the most recently pushed sample caused the state to change. Time-based sampling is correctly managed.
@@ -67,12 +61,30 @@ public:
     void reset(boolean state);
 };
 
+
+class DebounceFilter4ms : public DebounceFilter {
+protected:
+    /* holds (byte)(millis() >> 2), rounding off millis to 4ms.
+     (0xFF<<2) ms is about 1 second - any sketch should be sampling its buttons faster than that.
+     */
+    byte mostRecent4ms;
+public:
+    //! A filter initialised to false
+    DebounceFilter4ms() : DebounceFilter(false) {}
+    //! A filter initialsed to the specified initial state
+    DebounceFilter4ms(boolean initialState): DebounceFilter(initialState) {}
+    
+    //! push a sample into the filter, samples are rate limited at one per 4ms
+    void addSampleRateLimited(boolean sample);
+
+};
+
 //! A debounced digital input.
 /*!
     This class builds a model on a digital input pin. The constructor initialises the pin to INPUT_PULLUP and reads its initial state.
  */
 
-class DebouncedInput : protected DebounceFilter {
+class DebouncedInput : protected DebounceFilter4ms {
 protected:
     int pin;
 public:
@@ -89,6 +101,8 @@ public:
     void attach(int pin);
     //! detach the DebouncedInput from its assigned pin
     void detach();
+    //! is the input currently attached to a pin?
+    boolean attached();
     
     //! read the pin, true if the debounced signal is HIGH
     boolean read();
