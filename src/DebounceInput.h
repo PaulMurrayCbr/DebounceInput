@@ -79,33 +79,13 @@ public:
 
 };
 
-//! A debounced digital input.
-/*!
-    This class builds a model on a digital input pin. The constructor initialises the pin to INPUT_PULLUP and reads its initial state.
- */
-
-class DebouncedInput : protected DebounceFilter4ms {
-protected:
-    int pin;
+class AbstractDebouncedInput : protected DebounceFilter4ms {
 public:
     using DebounceFilter::risingThreshhold;
     using DebounceFilter::fallingThreshhold;
     
-    //! A DebouncedInput unconnected to a pin
-    DebouncedInput();
+    virtual boolean read();
     
-    //! Set up pin as INPUT_PULLUP, and use it as a source of input
-    DebouncedInput(int pin);
-    
-    //! attach the DebouncedInput to a pin
-    void attach(int pin);
-    //! detach the DebouncedInput from its assigned pin
-    void detach();
-    //! is the input currently attached to a pin?
-    boolean attached();
-    
-    //! read the pin, true if the debounced signal is HIGH
-    boolean read();
     //! true if the debounced signal is HIGH
     boolean high();
     //! true if the debounced signal is LOW. This is a a convenience method for pushbuttons.
@@ -123,6 +103,52 @@ public:
     inline boolean readFalling() { read(); return falling();}
     //! read the pin, true if the debounced signal went from LOW to HIGH
     inline boolean readRising() { read(); return rising();}
+  };
+
+//! A debounced digital input.
+/*!
+    This class builds a model on a digital input pin. The constructor initialises the pin to INPUT_PULLUP and reads its initial state.
+ */
+
+class DebouncedInput : public AbstractDebouncedInput {
+protected:
+    int pin;
+public:
+    //! A DebouncedInput unconnected to a pin
+    DebouncedInput();
+    
+    //! Set up pin as INPUT_PULLUP, and use it as a source of input
+    DebouncedInput(int pin);
+    
+    //! attach the DebouncedInput to a pin
+    void attach(int pin);
+    //! detach the DebouncedInput from its assigned pin
+    void detach();
+    //! is the input currently attached to a pin?
+    boolean attached();
+
+    boolean read();
 };
+
+class DebouncedAnalogInput : public AbstractDebouncedInput {
+protected:
+    int pin;
+public:
+    //! A DebouncedInput unconnected to a pin
+    DebouncedAnalogInput();
+    
+    //! Set up pin as INPUT_PULLUP, and use it as a source of input
+    DebouncedAnalogInput(int pin);
+    
+    //! attach the DebouncedInput to a pin
+    void attach(int pin);
+    //! detach the DebouncedInput from its assigned pin
+    void detach();
+    //! is the input currently attached to a pin?
+    boolean attached();
+
+    boolean read();
+};
+
 
 #endif

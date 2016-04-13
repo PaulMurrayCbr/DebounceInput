@@ -129,23 +129,59 @@ boolean DebouncedInput::read() {
     return (filter & OUTPUT_MASK) != 0;
 }
 
-boolean DebouncedInput::high() {
+
+DebouncedAnalogInput::DebouncedAnalogInput() {
+    this->pin = 255;
+}
+
+DebouncedAnalogInput::DebouncedAnalogInput(int pin) {
+    this->pin = pin;
+    reset(analogRead(pin) >= 16);
+}
+
+void DebouncedAnalogInput::attach(int pin) {
+    this->pin = pin;
+    reset(analogRead(pin) >= 16);
+}
+
+void DebouncedAnalogInput::detach() {
+    this->pin = 255;
+    reset(false);
+}
+
+boolean DebouncedAnalogInput::attached() {
+    return this->pin == 255;
+}
+
+boolean DebouncedAnalogInput::read() {
+    if(pin == 255) return false;
+    addSampleRateLimited(analogRead(pin) >= 16);
     return (filter & OUTPUT_MASK) != 0;
 }
 
-boolean DebouncedInput::low() {
+
+
+boolean AbstractDebouncedInput::read() {
+    return true;
+}
+
+boolean AbstractDebouncedInput::high() {
+    return (filter & OUTPUT_MASK) != 0;
+}
+
+boolean AbstractDebouncedInput::low() {
     return (filter & OUTPUT_MASK) == 0;
 }
 
-boolean DebouncedInput::changing() {
+boolean AbstractDebouncedInput::changing() {
     return (filter & CHANGE_MASK) != 0;
 }
 
-boolean DebouncedInput::falling() {
+boolean AbstractDebouncedInput::falling() {
     return (filter & (CHANGE_MASK|OUTPUT_MASK)) == CHANGE_MASK;
 }
 
-boolean DebouncedInput::rising() {
+boolean AbstractDebouncedInput::rising() {
     return (filter & (CHANGE_MASK|OUTPUT_MASK)) == (CHANGE_MASK|OUTPUT_MASK);
 }
 
